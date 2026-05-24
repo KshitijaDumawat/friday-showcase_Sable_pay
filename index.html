@@ -449,15 +449,15 @@ body{
   transition:all .2s;display:inline-flex;align-items:center;gap:6px;
 }
 .btn-fnext:hover{transform:translateY(-2px);box-shadow:0 7px 28px rgba(0,0,0,.42);}
-  
+
 .di-btns{display:flex;gap:6px;margin-top:8px;}
-.di-btn{border:none;border-radius:6px;padding:4px 10px;font-size:.72rem;font-weight:600;cursor:pointer;transition:all .15s;}
-.di-btn.add{background:rgba(0,0,0,.09);color:rgba(0,0,0,.55);}
-.di-btn.add:hover{background:rgba(68,166,228,.18);color:#014070;}
-.di-btn.chg{background:rgba(68,166,228,.18);color:#014070;}
-.di-btn.chg:hover{background:rgba(68,166,228,.32);}
-.di-btn.del{background:rgba(220,50,50,.13);color:#8a0000;}
-.di-btn.del:hover{background:rgba(220,50,50,.28);}
+.di-btn{border:none;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s;}
+.di-btn.add{background:rgba(0,0,0,.08);color:rgba(0,0,0,.5);border:1.5px dashed rgba(0,0,0,.2);}
+.di-btn.add:hover{background:rgba(72,166,228,.15);color:#014070;}
+.di-btn.chg{background:rgba(72,166,228,.18);color:#014070;border:1px solid rgba(72,166,228,.3);}
+.di-btn.chg:hover{background:rgba(72,166,228,.32);}
+.di-btn.del{background:rgba(220,60,60,.12);color:#8a0000;border:1px solid rgba(220,60,60,.25);}
+.di-btn.del:hover{background:rgba(220,60,60,.26);}
   
 </style>
 </head>
@@ -756,50 +756,43 @@ body{
     </div>
     <div style="font-size:12px;opacity:.48;margin-bottom:12px;">Quick-access session materials — click any tile to set its link:</div>
     <div class="drive-grid" id="driveGrid">
-      <div class="drive-item" onclick="promptDriveItem(this)" data-key="slides">
-        <div class="drive-ico">📊</div>
-        <div><div class="drive-name" contenteditable="false">Session Slides</div><div class="drive-meta">Click to set link · Google Slides</div></div>
-      </div>
       <div class="drive-item" data-key="slides">
-          <div class="drive-icon">📊</div>
-          <div class="drive-label">Session Slides</div>
-          <div class="drive-meta">Click to set link · Google Slides</div>
-          <div class="di-btns">
-            <button class="di-btn add" onclick="diAdd(this)">＋ Add link</button>
-            <button class="di-btn chg" onclick="diChange(this)" style="display:none">✎ Change</button>
-            <button class="di-btn del" onclick="diRemove(this)" style="display:none">✕ Remove</button>
-          </div>
+        <div class="drive-ico">📊</div>
+        <div style="flex:1;"><div class="drive-name">Session Slides</div><div class="drive-meta">Click to set link · Google Slides</div></div>
+        <div class="di-btns">
+          <button class="di-btn add" onclick="diAdd(this)">＋ Add</button>
+          <button class="di-btn chg" onclick="diChange(this)" style="display:none">✎ Change</button>
+          <button class="di-btn del" onclick="diRemove(this)" style="display:none">✕ Remove</button>
         </div>
-        <div class="drive-item" data-key="data">
-          <div class="drive-icon">📋</div>
-          <div class="drive-label">Data &amp; Research</div>
-          <div class="drive-meta">Click to set link · Google Sheets</div>
-          <div class="di-btns">
-            <button class="di-btn add" onclick="diAdd(this)">＋ Add link</button>
-            <button class="di-btn chg" onclick="diChange(this)" style="display:none">✎ Change</button>
-            <button class="di-btn del" onclick="diRemove(this)" style="display:none">✕ Remove</button>
-          </div>
+      </div>
+      <div class="drive-item" data-key="data">
+        <div class="drive-ico">📋</div>
+        <div style="flex:1;"><div class="drive-name">Data &amp; Research</div><div class="drive-meta">Click to set link · Google Sheets</div></div>
+        <div class="di-btns">
+          <button class="di-btn add" onclick="diAdd(this)">＋ Add</button>
+          <button class="di-btn chg" onclick="diChange(this)" style="display:none">✎ Change</button>
+          <button class="di-btn del" onclick="diRemove(this)" style="display:none">✕ Remove</button>
         </div>
-        <div class="drive-item" data-key="notes">
-          <div class="drive-icon">📝</div>
-          <div class="drive-label">Meeting Notes</div>
-          <div class="drive-meta">Click to set link · Google Docs</div>
-          <div class="di-btns">
-            <button class="di-btn add" onclick="diAdd(this)">＋ Add link</button>
-            <button class="di-btn chg" onclick="diChange(this)" style="display:none">✎ Change</button>
-            <button class="di-btn del" onclick="diRemove(this)" style="display:none">✕ Remove</button>
-          </div>
+      </div>
+      <div class="drive-item" data-key="notes">
+        <div class="drive-ico">📝</div>
+        <div style="flex:1;"><div class="drive-name">Meeting Notes</div><div class="drive-meta">Click to set link · Google Docs</div></div>
+        <div class="di-btns">
+          <button class="di-btn add" onclick="diAdd(this)">＋ Add</button>
+          <button class="di-btn chg" onclick="diChange(this)" style="display:none">✎ Change</button>
+          <button class="di-btn del" onclick="diRemove(this)" style="display:none">✕ Remove</button>
         </div>
-        <div class="drive-item" data-key="folder">
-          <div class="drive-icon">🗂</div>
-          <div class="drive-label">Shared Folder</div>
-          <div class="drive-meta">Click to set link · Google Drive</div>
-          <div class="di-btns">
-            <button class="di-btn add" onclick="diAdd(this)">＋ Add link</button>
-            <button class="di-btn chg" onclick="diChange(this)" style="display:none">✎ Change</button>
-            <button class="di-btn del" onclick="diRemove(this)" style="display:none">✕ Remove</button>
-          </div>
+      </div>
+      <div class="drive-item" data-key="folder">
+        <div class="drive-ico">🗂</div>
+        <div style="flex:1;"><div class="drive-name">Shared Folder</div><div class="drive-meta">Click to set link · Google Drive</div></div>
+        <div class="di-btns">
+          <button class="di-btn add" onclick="diAdd(this)">＋ Add</button>
+          <button class="di-btn chg" onclick="diChange(this)" style="display:none">✎ Change</button>
+          <button class="di-btn del" onclick="diRemove(this)" style="display:none">✕ Remove</button>
         </div>
+      </div>
+    </div>
 <!-- ══════════════════════════
      PHASE 5 – FEEDBACK  (yellow)
 ══════════════════════════ -->
@@ -1136,21 +1129,9 @@ function saveDriveLink(){
   const btn=document.querySelector('[onclick="saveDriveLink()"]');
   if(btn){btn.textContent='Saved ✓';setTimeout(()=>btn.textContent='Save',1800);}
 }
-function _applyDriveItem(el,url){
-  el.onclick=null;el.removeAttribute('onclick');
-  el.addEventListener('click',()=>window.open(url,'_blank'));
-  el.querySelector('.drive-meta').textContent='Click to open · drive.google.com';
-  el.style.borderColor='rgba(72,180,232,.55)';
-  const key=el.dataset.key;
-  if(key){
-    const saved=JSON.parse(localStorage.getItem('drive_items')||'{}');
-    saved[key]=url;
-    localStorage.setItem('drive_items',JSON.stringify(saved));
-  }
-}
 function diAdd(btn){
   var el=btn.closest('.drive-item');
-  var url=prompt('Paste Google Drive link for "'+el.querySelector('.drive-label').textContent+'":');
+  var url=prompt('Paste Google Drive link for "'+el.querySelector('.drive-name').textContent+'":');
   if(!url||!url.trim())return;
   diApply(el,url.trim());
 }
@@ -1158,12 +1139,12 @@ function diChange(btn){
   var el=btn.closest('.drive-item');
   var url=prompt('New link (leave blank to remove):',el.dataset.url||'');
   if(url===null)return;
-  if(!url.trim())diClear(el); else diApply(el,url.trim());
+  if(!url.trim())diClear(el);else diApply(el,url.trim());
 }
 function diRemove(btn){diClear(btn.closest('.drive-item'));}
 function diApply(el,url){
   el.dataset.url=url;
-  el.onclick=function(e){if(e.target.tagName!=='BUTTON')window.open(url,'_blank');};
+  el.onclick=function(e){if(e.target.tagName==='BUTTON')return;window.open(url,'_blank');};
   el.querySelector('.drive-meta').textContent='Click to open · drive.google.com';
   el.style.borderColor='rgba(72,180,232,.6)';
   el.querySelectorAll('.di-btn.add').forEach(function(b){b.style.display='none';});
@@ -1180,7 +1161,6 @@ function diClear(el){
   var k=el.dataset.key;
   if(k){var s=JSON.parse(localStorage.getItem('di')||'{}');delete s[k];localStorage.setItem('di',JSON.stringify(s));}
 }
-function promptDriveItem(el){diAdd(el.querySelector('.di-btn.add'));}
 (function(){
   var s=JSON.parse(localStorage.getItem('di')||'{}');
   document.querySelectorAll('.drive-item[data-key]').forEach(function(el){
