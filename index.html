@@ -450,15 +450,14 @@ body{
 }
 .btn-fnext:hover{transform:translateY(-2px);box-shadow:0 7px 28px rgba(0,0,0,.42);}
   
-.drive-edit-btn{
-  position:absolute;top:8px;right:8px;width:24px;height:24px;
-  border-radius:50%;background:rgba(255,255,255,.9);
-  border:1px solid rgba(0,0,0,.15);font-size:12px;cursor:pointer;
-  display:none;align-items:center;justify-content:center;
-  transition:all .15s;z-index:10;
-}
-.drive-item:hover .drive-edit-btn{display:flex;}
-.drive-edit-btn:hover{background:#fff;transform:scale(1.2);}
+.di-btns{display:flex;gap:6px;margin-top:8px;}
+.di-btn{border:none;border-radius:6px;padding:4px 10px;font-size:.72rem;font-weight:600;cursor:pointer;transition:all .15s;}
+.di-btn.add{background:rgba(0,0,0,.09);color:rgba(0,0,0,.55);}
+.di-btn.add:hover{background:rgba(68,166,228,.18);color:#014070;}
+.di-btn.chg{background:rgba(68,166,228,.18);color:#014070;}
+.di-btn.chg:hover{background:rgba(68,166,228,.32);}
+.di-btn.del{background:rgba(220,50,50,.13);color:#8a0000;}
+.di-btn.del:hover{background:rgba(220,50,50,.28);}
   
 </style>
 </head>
@@ -761,23 +760,46 @@ body{
         <div class="drive-ico">📊</div>
         <div><div class="drive-name" contenteditable="false">Session Slides</div><div class="drive-meta">Click to set link · Google Slides</div></div>
       </div>
-      <div class="drive-item" onclick="promptDriveItem(this)" data-key="data">
-        <div class="drive-ico">📋</div>
-        <div><div class="drive-name" contenteditable="false">Data &amp; Research</div><div class="drive-meta">Click to set link · Google Sheets</div></div>
-      </div>
-      <div class="drive-item" onclick="promptDriveItem(this)" data-key="notes">
-        <div class="drive-ico">📝</div>
-        <div><div class="drive-name" contenteditable="false">Meeting Notes</div><div class="drive-meta">Click to set link · Google Docs</div></div>
-      </div>
-      <div class="drive-item" onclick="promptDriveItem(this)" data-key="folder">
-        <div class="drive-ico">🗂</div>
-        <div><div class="drive-name" contenteditable="false">Shared Folder</div><div class="drive-meta">Click to set link · Google Drive</div></div>
-      </div>
-    </div>
-    <button class="addbtn addbtn-w" onclick="addDriveItem()" style="margin-top:10px;">＋ Add resource</button>
-  </div>
-</div>
-
+      <div class="drive-item" data-key="slides">
+          <div class="drive-icon">📊</div>
+          <div class="drive-label">Session Slides</div>
+          <div class="drive-meta">Click to set link · Google Slides</div>
+          <div class="di-btns">
+            <button class="di-btn add" onclick="diAdd(this)">＋ Add link</button>
+            <button class="di-btn chg" onclick="diChange(this)" style="display:none">✎ Change</button>
+            <button class="di-btn del" onclick="diRemove(this)" style="display:none">✕ Remove</button>
+          </div>
+        </div>
+        <div class="drive-item" data-key="data">
+          <div class="drive-icon">📋</div>
+          <div class="drive-label">Data &amp; Research</div>
+          <div class="drive-meta">Click to set link · Google Sheets</div>
+          <div class="di-btns">
+            <button class="di-btn add" onclick="diAdd(this)">＋ Add link</button>
+            <button class="di-btn chg" onclick="diChange(this)" style="display:none">✎ Change</button>
+            <button class="di-btn del" onclick="diRemove(this)" style="display:none">✕ Remove</button>
+          </div>
+        </div>
+        <div class="drive-item" data-key="notes">
+          <div class="drive-icon">📝</div>
+          <div class="drive-label">Meeting Notes</div>
+          <div class="drive-meta">Click to set link · Google Docs</div>
+          <div class="di-btns">
+            <button class="di-btn add" onclick="diAdd(this)">＋ Add link</button>
+            <button class="di-btn chg" onclick="diChange(this)" style="display:none">✎ Change</button>
+            <button class="di-btn del" onclick="diRemove(this)" style="display:none">✕ Remove</button>
+          </div>
+        </div>
+        <div class="drive-item" data-key="folder">
+          <div class="drive-icon">🗂</div>
+          <div class="drive-label">Shared Folder</div>
+          <div class="drive-meta">Click to set link · Google Drive</div>
+          <div class="di-btns">
+            <button class="di-btn add" onclick="diAdd(this)">＋ Add link</button>
+            <button class="di-btn chg" onclick="diChange(this)" style="display:none">✎ Change</button>
+            <button class="di-btn del" onclick="diRemove(this)" style="display:none">✕ Remove</button>
+          </div>
+        </div>
 <!-- ══════════════════════════
      PHASE 5 – FEEDBACK  (yellow)
 ══════════════════════════ -->
@@ -1126,28 +1148,46 @@ function _applyDriveItem(el,url){
     localStorage.setItem('drive_items',JSON.stringify(saved));
   }
 }
-function promptDriveItem(el){
-  const url=prompt('Paste the Google Drive link:','https://drive.google.com/');
-  if(url) _applyDriveItem(el,url);
+function diAdd(btn){
+  var el=btn.closest('.drive-item');
+  var url=prompt('Paste Google Drive link for "'+el.querySelector('.drive-label').textContent+'":');
+  if(!url||!url.trim())return;
+  diApply(el,url.trim());
 }
-function addDriveItem(){
-  const g=document.getElementById('driveGrid');
-  const key='item_'+Date.now();
-  const item=document.createElement('div');
-  item.className='drive-item';item.dataset.key=key;
-  item.innerHTML='<div class="drive-ico">📎</div><div><div class="drive-name">New Resource</div><div class="drive-meta">Click to set link</div></div>';
-  item.onclick=()=>promptDriveItem(item);
-  g.appendChild(item);
+function diChange(btn){
+  var el=btn.closest('.drive-item');
+  var url=prompt('New link (leave blank to remove):',el.dataset.url||'');
+  if(url===null)return;
+  if(!url.trim())diClear(el); else diApply(el,url.trim());
 }
-// Restore saved links on load
+function diRemove(btn){diClear(btn.closest('.drive-item'));}
+function diApply(el,url){
+  el.dataset.url=url;
+  el.onclick=function(e){if(e.target.tagName!=='BUTTON')window.open(url,'_blank');};
+  el.querySelector('.drive-meta').textContent='Click to open · drive.google.com';
+  el.style.borderColor='rgba(72,180,232,.6)';
+  el.querySelectorAll('.di-btn.add').forEach(function(b){b.style.display='none';});
+  el.querySelectorAll('.di-btn.chg,.di-btn.del').forEach(function(b){b.style.display='';});
+  var k=el.dataset.key;
+  if(k){var s=JSON.parse(localStorage.getItem('di')||'{}');s[k]=url;localStorage.setItem('di',JSON.stringify(s));}
+}
+function diClear(el){
+  delete el.dataset.url;el.onclick=null;
+  el.querySelector('.drive-meta').textContent='Click to set link · Google Drive';
+  el.style.borderColor='';
+  el.querySelectorAll('.di-btn.add').forEach(function(b){b.style.display='';});
+  el.querySelectorAll('.di-btn.chg,.di-btn.del').forEach(function(b){b.style.display='none';});
+  var k=el.dataset.key;
+  if(k){var s=JSON.parse(localStorage.getItem('di')||'{}');delete s[k];localStorage.setItem('di',JSON.stringify(s));}
+}
+function promptDriveItem(el){diAdd(el.querySelector('.di-btn.add'));}
 (function(){
-  const f=localStorage.getItem('drive_folder');
-  if(f)document.getElementById('driveLinkInp').value=f;
-  const saved=JSON.parse(localStorage.getItem('drive_items')||'{}');
-  document.querySelectorAll('.drive-item[data-key]').forEach(el=>{
-    const url=saved[el.dataset.key];
-    if(url)_applyDriveItem(el,url);
+  var s=JSON.parse(localStorage.getItem('di')||'{}');
+  document.querySelectorAll('.drive-item[data-key]').forEach(function(el){
+    var u=s[el.dataset.key];if(u)diApply(el,u);
   });
+  var f=localStorage.getItem('drive_folder');
+  if(f){var i=document.getElementById('driveLinkInp');if(i)i.value=f;}
 })();
 function addDriveItem(){
   const g=document.getElementById('driveGrid');
