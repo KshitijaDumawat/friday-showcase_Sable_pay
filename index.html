@@ -746,19 +746,19 @@ body{
     </div>
     <div style="font-size:12px;opacity:.48;margin-bottom:12px;">Quick-access session materials — click any tile to set its link:</div>
     <div class="drive-grid" id="driveGrid">
-      <div class="drive-item" onclick="promptDriveItem(this)">
+      <div class="drive-item" onclick="promptDriveItem(this)" data-key="slides">
         <div class="drive-ico">📊</div>
         <div><div class="drive-name" contenteditable="false">Session Slides</div><div class="drive-meta">Click to set link · Google Slides</div></div>
       </div>
-      <div class="drive-item" onclick="promptDriveItem(this)">
+      <div class="drive-item" onclick="promptDriveItem(this)" data-key="data">
         <div class="drive-ico">📋</div>
         <div><div class="drive-name" contenteditable="false">Data &amp; Research</div><div class="drive-meta">Click to set link · Google Sheets</div></div>
       </div>
-      <div class="drive-item" onclick="promptDriveItem(this)">
+      <div class="drive-item" onclick="promptDriveItem(this)" data-key="notes">
         <div class="drive-ico">📝</div>
         <div><div class="drive-name" contenteditable="false">Meeting Notes</div><div class="drive-meta">Click to set link · Google Docs</div></div>
       </div>
-      <div class="drive-item" onclick="promptDriveItem(this)">
+      <div class="drive-item" onclick="promptDriveItem(this)" data-key="folder">
         <div class="drive-ico">🗂</div>
         <div><div class="drive-name" contenteditable="false">Shared Folder</div><div class="drive-meta">Click to set link · Google Drive</div></div>
       </div>
@@ -1091,19 +1091,54 @@ function resizeF(){document.getElementById('eFrame').style.height=document.getEl
 function goFS(){const f=document.getElementById('eFrame');(f.requestFullscreen||f.webkitRequestFullscreen).call(f);}
 
 // ── GOOGLE DRIVE ──
-function openDriveLink(){const url=document.getElementById('driveLinkInp').value.trim();if(url)window.open(url,'_blank');else alert('Paste your Google Drive folder link first.');}
-function saveDriveLink(){const url=document.getElementById('driveLinkInp').value.trim();if(!url){alert('Enter a link first.');return;}alert('Drive link saved! Click "Open Folder ↗" to access.');}
-function promptDriveItem(el){
-  const url=prompt('Paste the Google Drive link for this resource:','https://drive.google.com/');
-  if(url){
-    const prev=el.onclick;
-    el.onclick=null;
-    el.removeAttribute('onclick');
-    el.addEventListener('click',()=>window.open(url,'_blank'));
-    el.querySelector('.drive-meta').textContent='Click to open · drive.google.com';
-    el.style.borderColor='rgba(249,201,6,.6)';
+// ── GOOGLE DRIVE ──
+function openDriveLink(){
+  const url=document.getElementById('driveLinkInp').value.trim();
+  if(url)window.open(url,'_blank');
+  else alert('Paste your Google Drive folder link first.');
+}
+function saveDriveLink(){
+  const url=document.getElementById('driveLinkInp').value.trim();
+  if(!url){alert('Enter a link first.');return;}
+  localStorage.setItem('drive_folder',url);
+  const btn=document.querySelector('[onclick="saveDriveLink()"]');
+  if(btn){btn.textContent='Saved ✓';setTimeout(()=>btn.textContent='Save',1800);}
+}
+function _applyDriveItem(el,url){
+  el.onclick=null;el.removeAttribute('onclick');
+  el.addEventListener('click',()=>window.open(url,'_blank'));
+  el.querySelector('.drive-meta').textContent='Click to open · drive.google.com';
+  el.style.borderColor='rgba(72,180,232,.55)';
+  const key=el.dataset.key;
+  if(key){
+    const saved=JSON.parse(localStorage.getItem('drive_items')||'{}');
+    saved[key]=url;
+    localStorage.setItem('drive_items',JSON.stringify(saved));
   }
 }
+function promptDriveItem(el){
+  const url=prompt('Paste the Google Drive link:','https://drive.google.com/');
+  if(url) _applyDriveItem(el,url);
+}
+function addDriveItem(){
+  const g=document.getElementById('driveGrid');
+  const key='item_'+Date.now();
+  const item=document.createElement('div');
+  item.className='drive-item';item.dataset.key=key;
+  item.innerHTML='<div class="drive-ico">📎</div><div><div class="drive-name">New Resource</div><div class="drive-meta">Click to set link</div></div>';
+  item.onclick=()=>promptDriveItem(item);
+  g.appendChild(item);
+}
+// Restore saved links on load
+(function(){
+  const f=localStorage.getItem('drive_folder');
+  if(f)document.getElementById('driveLinkInp').value=f;
+  const saved=JSON.parse(localStorage.getItem('drive_items')||'{}');
+  document.querySelectorAll('.drive-item[data-key]').forEach(el=>{
+    const url=saved[el.dataset.key];
+    if(url)_applyDriveItem(el,url);
+  });
+})();
 function addDriveItem(){
   const g=document.getElementById('driveGrid');
   const item=document.createElement('div');item.className='drive-item';
